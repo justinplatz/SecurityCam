@@ -8,6 +8,7 @@ import picamera
 import sys, os
 import json,httplib
 import base64
+import threading
 
 sensor = 4
 
@@ -30,7 +31,10 @@ count = 0
 channel = 'iotchannel'
 message = "hello from pi"
  
-imgCount = 3
+## Camera Settings
+imgCount   = 3
+frameSleep = 0.5    # Seconds between burst-snaps
+camSleep   = 5      # Seconds between Detections
 
 def callbackfn(m, n):
   print(m)
@@ -50,6 +54,29 @@ def is_person(image):
     return faces + uppers + fulls + peds
     # return len(det.face()) or len(det.full_body()) or len(det.upper_body()) # or len(det.pedestrian())
 
+def processImage(imgFile):
+    if is_person(imgFile):
+        print "True"
+        with open(imgFile, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read())
+        connection.request('POST', '/1/classes/Selfie', json.dumps({
+            "fileData": encoded_string,
+            "fileName": imgFile,
+        }), {
+            "X-Parse-Application-Id": "S7cS6MQyMb7eMjWRWsC32owq9cDx0zyrM58MSevK",
+            "X-Parse-REST-API-Key": "RghYdl6Z2Pqpl2KjIqacZE6AoRn4csLM02e6j6ZH",
+            "Content-Type": "application/json"
+        })
+        try:
+            result = json.loads(connection.getresponse().read())
+        except:
+            print "Error Uploading."
+        pi.send(channel, imgFile)
+    else:   # Not a person
+        print "False"
+    os.remove(imgFile)
+    sys.exit(0) 
+
 try:
     cam.start_preview()
     cam.preview_fullscreen = False
@@ -64,34 +91,17 @@ try:
                 cam.preview_fullscreen = False
                 cam.preview_window = (10,10, 320,240)
                 print('Motion Detected')
-                curTime = (time.strftime("%I:%M:%S")) + "_%d.jpg"
+                
                 for i in range(imgCount):
-                    cam.capture(curTime % i, resize=(320,240))
-                    time.sleep(0.5)
-                    print "Taking Photo %d" % i
+                    curTime = (time.strftime("%I:%M:%S")) + ".jpg"
+                    cam.capture(curTime, resize=(320,240))
+
+                    t = threading.Thread(target=processImage, args = (curTime,))
+                    t.daemon = True
+                    t.start()
+                    time.sleep(frameSleep)
                 cam.stop_preview()
-                for i in range(imgCount):
-                    imgFile = curTime % i
-                    if is_person(imgFile):
-                        print "True"
-                        with open(imgFile, "rb") as image_file:
-                            encoded_string = base64.b64encode(image_file.read())
-                        connection.request('POST', '/1/classes/Selfie', json.dumps({
-                            "fileData": encoded_string,
-                            "fileName": imgFile,
-                        }), {
-                            "X-Parse-Application-Id": "S7cS6MQyMb7eMjWRWsC32owq9cDx0zyrM58MSevK",
-                            "X-Parse-REST-API-Key": "RghYdl6Z2Pqpl2KjIqacZE6AoRn4csLM02e6j6ZH",
-                            "Content-Type": "application/json"
-                        })
-                        try:
-                            result = json.loads(connection.getresponse().read())
-                        except:
-                            print "Error Uploading."
-                        pi.send(channel, imgFile)
-                    else:   # Not a person
-                        print "False"
-                    os.remove(imgFile)  
+                time.sleep(camSleep)
 
 except KeyboardInterrupt:
   cam.stop_preview()
