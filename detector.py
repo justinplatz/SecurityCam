@@ -9,7 +9,8 @@ class Detector():
 		self.image = []
 		self.drawn = 0
 		self.drawColors = [(255,0,0),(0,255,0),(0,0,255),(255,255,0),(255,0,255),(0,255,255)]
-		self.path  = "/home/pi/CV/opencv-2.4.10/data/haarcascades/"
+		# self.path  = "/home/pi/CV/opencv-2.4.10/data/haarcascades/"
+		self.path = "xml/"
 		self.rects = []
 		self.overlays = ["face","obama","lebron","curry", "nick", 
 						"bat", "captain", "hulk", "ironman", "spider","xmen"]
@@ -44,7 +45,7 @@ class Detector():
 		return self.detect('haarcascade_upperbody.xml')
 
 	def pedestrian(self):
-		return self.detect("../hogcascades/hogcascade_pedestrians.xml")
+		return self.detect("hogcascade_pedestrians.xml")
 
 	def draw(self):
 		for hits in self.rects:
