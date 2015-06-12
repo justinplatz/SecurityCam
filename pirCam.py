@@ -29,9 +29,6 @@ pubnub = Pubnub(publish_key = 'pub-c-f83b8b34-5dbc-4502-ac34-5073f2382d96',
 cam = picamera.PiCamera()
 lock = threading.Lock()
 
-startT = time.time()
-count = 0
-
 channel    = 'iotchannel'
 subchannel = 'liveCamStatus'
  
@@ -39,35 +36,6 @@ subchannel = 'liveCamStatus'
 imgCount   = 3
 frameSleep = 0.5    # Seconds between burst-snaps
 camSleep   = 5      # Seconds between Detections
-
-def _callback(msg, n):
-    global current_state, imgCount
-
-    print(msg)
-    curTime = (time.strftime("%I:%M:%S")) + ".jpg"
-    lock.acquire()
-    print "Pre Cap"
-    cam.capture(curTime, resize=(320,240))
-    print "Post Cap"
-    lock.release()
-
-    with open(curTime, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read())
-    connection.request('POST', '/1/classes/Selfie', json.dumps({
-        "fileData": encoded_string,
-        "fileName": curTime,
-    }), {
-        "X-Parse-Application-Id": "S7cS6MQyMb7eMjWRWsC32owq9cDx0zyrM58MSevK",
-        "X-Parse-REST-API-Key": "RghYdl6Z2Pqpl2KjIqacZE6AoRn4csLM02e6j6ZH",
-        "Content-Type": "application/json"
-    })
-    try:
-        result = json.loads(connection.getresponse().read())
-        print result
-    except:
-        print "Error Uploading."
-    pubnub.publish(channel,curTime)
-    os.remove(curTime)
 
 def _error(m):
     print(m)
@@ -151,4 +119,3 @@ except KeyboardInterrupt:
   cam.stop_preview()
   pubnub.unsubscribe(subchannel)
   sys.exit(0)
-
