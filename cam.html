@@ -1,0 +1,436 @@
+<!DOCTYPE HTML>
+<html lang="em">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="http://fonts.googleapis.com/css?family=Homemade+Apple" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
+<!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+<style>
+
+
+
+h1{
+  font-size: 1em;
+  font-family: 'Homemade Apple', sans-serif;
+}
+
+
+body {
+  background: #d9d9d9;
+  text-align: center;
+}
+
+@import url("//fonts.googleapis.com/css?family=Lato:400");
+
+body { 
+  background-color: #222;
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;  
+  height: 100vh;
+}
+
+/*.container {
+  background: #494949;
+  padding:1.5em 2em;
+  margin:2em;
+
+}*/
+
+img.polaroid{
+  /*background:#000; 
+  border:solid #fff;
+  border-width:6px 6px 40px 6px;
+  box-shadow:1px 1px 5px #333; 
+  -webkit-box-shadow:1px 1px 5px #333;
+  -moz-box-shadow:1px 1px 5px #333;*/
+  height:auto; /*Set to height of your image or desired div*/
+  width:25vw; /*Set to width of your image or desired div*/
+}
+
+.frame{
+
+  background:#000; 
+  border:solid #fff;
+  border-width:6px 6px 6px 6px;
+  box-shadow:1px 1px 5px #333; 
+  width: 25vw;
+  height: auto;
+  background-color: white;
+  -webkit-box-shadow:1px 1px 5px #333;
+  -moz-box-shadow:1px 1px 5px #333;
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-bottom: 1em;
+  display: inline-block;
+
+}
+
+
+
+
+/* ----------- iPhone 5 and 5S ----------- */
+
+/* Portrait and Landscape */
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 2) {
+
+  img.polaroid{
+    height:auto; /*Set to height of your image or desired div*/
+    width:75vw; /*Set to width of your image or desired div*/
+  }
+  .frame{
+    width: 75vw;
+    height: auto;
+  } 
+}
+
+
+.fade {
+  transition: all 0.4s ease-out;
+  opacity: 0;
+}
+.fade .show {
+  opacity: 1;
+}
+
+
+
+button {
+  overflow: hidden;
+  position: relative;  
+  cursor: pointer;
+  padding: 12px 48px;
+  background: #8AC007;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  color: white;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  font-size: 18px;
+  margin-bottom:1em;
+  width: 8em;
+}
+
+button:hover {
+  background: #95cf08;
+}
+
+.circle {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: white;
+  border-radius: 50%;
+  -webkit-animation: scale-circle 2.5s;
+          animation: scale-circle 2.5s;
+}
+
+@-webkit-keyframes scale-circle {
+  from {
+    -webkit-transform: scale(0.2);
+            transform: scale(0.2);
+    opacity: 0.6;
+  }
+  to {
+    -webkit-transform: scale(100);
+            transform: scale(100);
+    opacity: 0;
+  }
+}
+
+@keyframes scale-circle {
+  from {
+    -webkit-transform: scale(0.2);
+            transform: scale(0.2);
+    opacity: 0.6;
+  }
+  to {
+    -webkit-transform: scale(100);
+            transform: scale(100);
+    opacity: 0;
+  }
+}
+
+h2{
+  font-size: 3em;
+  color: white;
+  font-family: 'Bangers', cursive;
+}
+
+.cameraON{
+  color: green;
+}
+.cameraOff{
+  color: red;
+}
+
+.boxGreen{
+  width: 2vw;
+  height: 2vw;
+  border:2px solid #00FF00;
+  display: inline-table;
+  font-size: 18px;
+  color: #00FF00;
+  font-family: 'Bangers', cursive;
+}
+.boxRed{
+  width: 2vw;
+  height: 2vw;
+  border:2px solid #FF0000;
+  display: inline-table;
+  font-size: 18px;
+  color: #FF0000;
+  font-family: 'Bangers', cursive;
+
+
+
+}
+.boxBlue{
+  width: 2vw;
+  height: 2vw;
+  border:2px solid #0000FF;
+  display: inline-table;
+  font-size: 18px;
+  color: #0000FF;
+  font-family: 'Bangers', cursive;
+
+
+}
+.boxTeal{
+  width: 2vw;
+  height: 2vw;
+  border:2px solid #00FFFF;
+  display: inline-table;
+  font-size: 18px;
+  color: #00FFFF;
+  font-family: 'Bangers', cursive;
+
+
+}
+
+
+
+
+
+</style>
+
+</style>
+
+</head>
+<body>        
+
+
+  <script src="http://cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
+  <script src="http://www.parsecdn.com/js/parse-1.4.2.min.js"></script>  
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+<h2 class="occupancy"> </h2>
+
+  <h2>Camera is <span id="status" class="cameraOff"> Off</span></h2>
+ 
+
+  <form>
+    <label for="photoNum" style = "color:white; font-family: 'Bangers', cursive; font-size: 18px;">Photos per Page: </label>
+    <input  id="photoNum" name="photos" size="5"> 
+    <button onclick="submit();" style="font-family: 'Bangers', cursive;">Enter</button>
+    <br>
+  </form>
+
+  <div class="boxGreen">
+    <div>Upperbody Detection</div>
+  </div>
+  <div class="boxBlue">
+    <div>Facial Detection</div>
+  </div>
+  <div class="boxRed">
+    <div>Full Body Detection</div>
+  </div>
+  <div class="boxTeal">
+    <div>Pedestrian Detection</div>
+  </div>
+
+<!--   <button>
+    Take a Photo!
+  </button> -->
+
+<script>
+
+// (function (window, $) {
+//   $(function() {
+//     $('button').on('click', function (event) {
+//       event.preventDefault();
+      
+//       var $div = $('<div/>'),
+//           btnOffset = $(this).offset(),
+//           xPos = event.pageX - btnOffset.left,
+//           yPos = event.pageY - btnOffset.top;
+
+//       $div
+//         .addClass('circle')
+//         .css({
+//           top: yPos - 15,
+//           left: xPos - 15
+//         }) 
+//         .appendTo($(this));
+
+//       window.setTimeout(function(){
+//         $div.remove();
+//       }, 2000);
+
+//       console.log("Button click")
+
+//       pubnub.publish({
+//         channel: 'liveCamClick',        
+//         message: 'take a photo!'
+//       });
+//     });
+//   });
+// })(window, jQuery);
+
+// </script>
+
+  <div id="placehere" class ="container" style="margin-top:2vh;">
+
+  </div>
+
+
+
+<script>
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+  var strLimit = getParameterByName('photos');
+  var queryLimit = strLimit === "" ? 9 : parseInt(strLimit);
+
+    var pubnub = PUBNUB.init({
+      publish_key: 'pub-c-f83b8b34-5dbc-4502-ac34-5073f2382d96',
+      subscribe_key: 'sub-c-34be47b2-f776-11e4-b559-0619f8945a4f'
+    });
+
+        Parse.initialize("S7cS6MQyMb7eMjWRWsC32owq9cDx0zyrM58MSevK", "oPxXssH0RekqywNWC4Y56a2fJNCxWpoEtOzFuvRZ");
+        var Selfie = Parse.Object.extend("Selfie");
+        var query = new Parse.Query(Selfie);
+        query.addDescending('createdAt');
+        query.find({
+        success: function(results) {
+          // Do something with the returned Parse.Object values
+          for (var i = 0; i < queryLimit; i++) { 
+            var object = results[i];
+            var filedata = "data:image/png;base64," + object.get('fileData')
+            var frame =  document.createElement("div");
+            frame.setAttribute("class", "frame");
+            var elem = document.createElement("img");
+            elem.setAttribute("src", filedata);
+            elem.setAttribute("class", "polaroid");
+
+            var filename = object.createdAt.toString();
+            var text = document.createElement("h1");
+            text.innerHTML = filename.split("GMT")[0];
+            frame.appendChild(elem);
+            frame.appendChild(text)
+            // document.getElementById("placehere").appendChild(text);
+
+
+            document.getElementById("placehere").appendChild(frame);
+          }
+        },
+        error: function(error) {
+          alert("Error: " + error.code + " " + error.message);
+        }
+      });
+
+  pubnub.subscribe({
+    channel: 'iotchannel',
+    message: function(m){
+      var Selfie = Parse.Object.extend("Selfie");
+      var query = new Parse.Query(Selfie);
+      query.addDescending('createdAt');
+      query.equalTo("fileName", m);
+      query.find({
+        success: function(results) {
+          // Do something with the returned Parse.Object values
+          for (var i = 0; i < results.length; i++) { 
+            var object = results[i];
+            var filedata = "data:image/png;base64," + object.get('fileData')
+            var frame =  document.createElement("div");
+            frame.setAttribute("class", "frame");
+            var elem = document.createElement("img");
+            elem.setAttribute("src", filedata);
+            elem.setAttribute("class", "polaroid");
+
+
+            var filename = object.createdAt.toString();
+            var text = document.createElement("h1");
+            text.innerHTML = filename.split("GMT")[0];
+            frame.appendChild(elem);
+            frame.appendChild(text)
+
+            document.getElementById("placehere").appendChild(frame);
+            var container = document.getElementById('placehere');
+            container.insertBefore(document.getElementById("placehere").appendChild(frame), container.firstChild);
+          }        
+        
+
+        },
+        error: function(error) {
+          alert("Error: " + error.code + " " + error.message);
+        }
+      });
+    },
+
+    error: function (error) {
+      // Handle error here
+      console.log(JSON.stringify(error));
+    }
+  });
+   
+  pubnub.subscribe({
+     channel: "liveCam",
+     presence: function(m){
+      console.log(m)
+      $(".occupancy").text("There are " + m['occupancy'] + " viewers here right now");
+
+    },
+     message: function(m){console.log(m)}
+
+  });
+
+
+
+
+
+  pubnub.subscribe({
+     channel: "liveCamStatus",
+     presence: function(m){
+      console.log(m)
+      if(m['uuid'] == "pi"){
+        if (m['action']=="join"){
+          document.getElementById("status").className = "cameraON";
+          document.getElementById("status").innerHTML = "On";
+
+        } 
+        else {
+          document.getElementById("status").className = "cameraOff";
+          document.getElementById("status").innerHTML = "Off";
+        }
+      } 
+    },
+     message: function(m){console.log(m);}
+   
+  });
+
+
+
+</script>
+
+
+
+
+
+
+</body>
+</html>
