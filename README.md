@@ -1,3 +1,4 @@
+# Read Full Blog Post at: https://www.pubnub.com/blog/2015-06-30-create-realtime-raspberry-pi-security-camera-w-parse/
 # Create A Realtime Security Camera Using Raspberry Pi, Parse & PubNub
 
 Nowadays an insight is more or less useless if it is out of time. There are so many time-sensitive industries such as financial trading and risk-management systems which require immediate access to data. Changes in market conditions for example, happen far too quickly to rely on old information. One must have access to realtime information to make well-informed decisions. The same logic holds true for home security. Time is the biggest factor in any emergency, but in the case of fire, and break-ins, time is of the essence. A realtime emergency alert could mean the difference between safety and severe danger.
